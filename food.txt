@@ -1,0 +1,112 @@
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+
+string toLowerCase(const string& str) {
+    string lower = str;
+    transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+    return lower;
+}
+
+bool isSafeToEat(const vector<string>& ingredients, const unordered_set<string>& unsafeIngredients, string& unsafeFound) {
+    for (const string& ingredient : ingredients) {
+        if (unsafeIngredients.count(toLowerCase(ingredient))) {
+            unsafeFound = ingredient;
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    unordered_set<string> unsafeIngredients = {
+        "ethylene oxide", "trans fats", "acrylamide", "cadmium", "pesticides", "4-methylimidazole",
+        "high fructose corn syrup", "sodium nitrate", "monosodium glutamate", "butylated hydroxyanisole",
+        "potassium bromate", "aflatoxins", "formaldehyde", "refined flour", "saccharin", "tartrazine",
+        "lead", "mercury", "artificial sweeteners", "sodium benzoate", "sodium metabisulfite",
+        "aluminum compounds", "synthetic food colors", "bha", "bht", "malachite green", "oxalic acid",
+        "propylene glycol", "aspartame", "caramel coloring", "hydrogenated oils", "polysorbates",
+        "brominated vegetable oil", "diacetyl", "phosphoric acid", "potassium sorbate", "parabens",
+        "benzene", "chlorinated pesticides", "dimethylpolysiloxane", "sulphur dioxide",
+        "propylene glycol alginate", "artificial flavors", "red 40", "yellow 5", "blue 1", "cyclamate"
+    };
+
+    unordered_map<string, vector<string>> foodProducts = {
+        {"pizza", {"cheese", "tomato", "flour", "pepperoni"}},
+        {"salad", {"lettuce", "tomato", "cucumber", "olive oil"}},
+        {"peanut butter", {"peanuts", "salt"}},
+        {"soy sauce", {"soybeans", "wheat", "salt"}},
+        {"gluten-free bread", {"rice flour", "tapioca starch", "salt"}},
+        {"samosa", {"potatoes", "refined flour", "spices", "oil"}},
+        {"butter chicken", {"chicken", "butter", "cream", "spices"}},
+        {"biryani", {"rice", "meat", "spices", "fried onions"}},
+        {"gulab jamun", {"milk solids", "refined flour", "sugar syrup"}},
+        {"pani puri", {"semolina", "flour", "tamarind water", "potatoes"}},
+        {"instant noodles", {"refined flour", "salt", "artificial flavoring", "monosodium glutamate"}},
+        {"chips", {"potatoes", "salt", "artificial flavoring", "oil"}},
+        {"kulfi", {"milk", "sugar", "elaichi", "cream"}},
+        {"achar", {"vegetables", "mustard oil", "salt", "sodium benzoate"}},
+        {"ice cream", {"milk", "sugar", "artificial colors", "stabilizers"}},
+        {"cold drinks", {"water", "high fructose corn syrup", "phosphoric acid", "caramel coloring"}},
+        {"packaged cakes", {"refined flour", "hydrogenated oils", "sugar", "artificial flavors"}},
+        {"energy drinks", {"caffeine", "sugar", "aspartame", "artificial colors"}},
+        {"breakfast cereal", {"sugar", "synthetic vitamins", "artificial flavors"}},
+        {"instant soup", {"sodium benzoate", "monosodium glutamate", "artificial flavors"}},
+        {"canned vegetables", {"sodium benzoate", "salt", "sulphur dioxide"}},
+        {"ketchup", {"sugar", "sodium benzoate", "artificial colors"}},
+        {"ready-to-eat meals", {"refined flour", "preservatives", "artificial flavors"}},
+        {"packaged juices", {"sugar", "artificial sweeteners", "red 40"}},
+        {"processed cheese", {"hydrogenated oils", "salt", "artificial colors"}},
+        {"sausages", {"sodium nitrate", "salt", "potassium sorbate"}},
+        {"candy", {"sugar", "artificial colors", "artificial flavors"}},
+        {"flavored yogurt", {"artificial sweeteners", "artificial flavors", "stabilizers"}},
+        {"potato snacks", {"potatoes", "salt", "artificial flavors", "BHA"}},
+        {"ready-made desserts", {"sugar", "saccharin", "synthetic food colors"}},
+        {"ice pops", {"artificial colors", "high fructose corn syrup", "stabilizers"}},
+        {"milk powder", {"sugar", "aluminum compounds", "synthetic vitamins"}},
+        {"margarine", {"hydrogenated oils", "artificial colors", "propylene glycol"}},
+        {"processed meats", {"sodium nitrate", "sodium benzoate", "potassium bromate"}},
+        {"flavored coffee creamers", {"hydrogenated oils", "artificial flavors", "sugar"}},
+        {"fresh fruits", {"apple", "banana", "orange", "mango"}},
+        {"oatmeal", {"oats", "milk", "honey", "raisins"}},
+        {"green smoothie", {"spinach", "banana", "almond milk", "chia seeds"}},
+        {"grilled chicken", {"chicken breast", "olive oil", "lemon", "herbs"}},
+        {"quinoa salad", {"quinoa", "tomato", "cucumber", "lemon juice"}},
+        {"mixed nuts", {"almonds", "walnuts", "cashews"}},
+        {"yogurt parfait", {"greek yogurt", "granola", "fresh berries"}},
+        {"avocado toast", {"whole grain bread", "avocado", "olive oil", "pepper"}},
+        {"vegetable soup", {"carrot", "onion", "celery", "tomato"}},
+        {"roasted chickpeas", {"chickpeas", "olive oil", "spices"}}
+    };
+
+    string productName;
+    cout << "Enter the name of the food product: ";
+    getline(cin, productName);
+    string lowerProduct = toLowerCase(productName);
+
+    if (foodProducts.find(lowerProduct) != foodProducts.end()) {
+        vector<string> ingredients = foodProducts[lowerProduct];
+
+        cout << "Ingredients for " << productName << ":\n";
+        for (const string& ingredient : ingredients) {
+            cout << "- " << ingredient << endl;
+        }
+
+        string unsafeIngredient;
+        if (isSafeToEat(ingredients, unsafeIngredients, unsafeIngredient)) {
+            cout << productName << " is not safe to eat." << endl;
+        } else {
+            cout << productName << " is safe to eat. It contains unsafe ingredient: " << unsafeIngredient << endl;
+        }
+    } else {
+        cout << "Product not found." << endl;
+    }
+
+    return 0;
+}
